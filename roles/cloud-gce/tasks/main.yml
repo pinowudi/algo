@@ -30,6 +30,8 @@
           - '500'
           - '4500'
           - '{{ wireguard_port|string }}'
+          - '{{ wireguard_up1_port|string }}'
+          - '{{ wireguard_up2_port|string }}'
       - ip_protocol: tcp
         ports:
           - '{{ ssh_port }}'

@@ -11,6 +11,10 @@ Parameters:
     Type: String
   WireGuardPort:
     Type: String
+  WireGuardUp1Port:
+    Type: String
+  WireGuardUp2Port:
+    Type: String
   UseThisElasticIP:
     Type: String
     Default: ''
@@ -141,6 +145,14 @@ Resources:
         - IpProtocol: udp
           FromPort: !Ref WireGuardPort
           ToPort: !Ref WireGuardPort
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: !Ref WireGuardUp1Port
+          ToPort: !Ref WireGuardUp1Port
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: udp
+          FromPort: !Ref WireGuardUp2Port
+          ToPort: !Ref WireGuardUp2Port
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name

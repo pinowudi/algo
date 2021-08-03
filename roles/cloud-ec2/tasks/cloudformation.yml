@@ -12,6 +12,8 @@
       PublicSSHKeyParameter: "{{ lookup('file', SSH_keys.public) }}"
       ImageIdParameter: "{{ ami_image }}"
       WireGuardPort: "{{ wireguard_port }}"
+      WireGuardUp1Port: "{{ wireguard_up1_port }}"
+      WireGuardUp2Port: "{{ wireguard_up2_port }}"
       UseThisElasticIP: "{{ existing_eip }}"
       EbsEncrypted: "{{ encrypted }}"
       UserData: "{{ lookup('template', 'files/cloud-init/base.yml') | b64encode }}"

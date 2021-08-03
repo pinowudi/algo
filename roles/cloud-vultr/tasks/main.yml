@@ -23,6 +23,8 @@
     - { protocol: udp, port: 4500, ip: v6, cidr: "::/0" }
     - { protocol: udp, port: "{{ wireguard_port }}", ip: v4, cidr: "0.0.0.0/0" }
     - { protocol: udp, port: "{{ wireguard_port }}", ip: v6, cidr: "::/0" }
+    - { protocol: udp, port: "{{ wireguard_up1_port }}", ip: v4, cidr: "0.0.0.0/0" }
+    - { protocol: udp, port: "{{ wireguard_up2_port }}", ip: v4, cidr: "0.0.0.0/0" }
 
   - name: Upload the startup script
     vultr_startup_script:

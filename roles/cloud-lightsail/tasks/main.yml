@@ -27,6 +27,12 @@
         to_port: 500
         protocol: udp
       - from_port: "{{ wireguard_port }}"
+        to_port: "{{ wireguard_port }}"
+        protocol: udp
+      - from_port: "{{ wireguard_up1_port }}"
+        to_port: "{{ wireguard_up1_port }}"
+        protocol: udp
+      - from_port: "{{ wireguard_up2_port }}"
         to_port: "{{ wireguard_up2_port }}"
         protocol: udp
     user_data: |

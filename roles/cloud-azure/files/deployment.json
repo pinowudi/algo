@@ -8,6 +8,12 @@
     "WireGuardPort": {
       "type": "int"
     },
+    "WireGuardUp1Port": {
+      "type": "int"
+    },
+    "WireGuardUp2Port": {
+      "type": "int"
+    },
     "vmSize": {
       "type": "string"
     },
@@ -91,6 +97,34 @@
               "protocol": "Udp",
               "sourcePortRange": "*",
               "destinationPortRange": "[parameters('WireGuardPort')]",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 130,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "AllowWireGuardUp1",
+            "properties": {
+              "description": "WG upstream 1",
+              "protocol": "Udp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[parameters('WireGuardUp1Port')]",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 130,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "AllowWireGuardUp2",
+            "properties": {
+              "description": "WG upstream 2",
+              "protocol": "Udp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[parameters('WireGuardUp2Port')]",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",

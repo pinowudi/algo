@@ -30,6 +30,8 @@
         - { proto: udp, start_port: 4500, end_port: 4500, range: 0.0.0.0/0 }
         - { proto: udp, start_port: 500, end_port: 500, range: 0.0.0.0/0 }
         - { proto: udp, start_port: "{{ wireguard_port }}", end_port: "{{ wireguard_port }}", range: 0.0.0.0/0 }
+        - { proto: udp, start_port: "{{ wireguard_up1_port }}", end_port: "{{ wireguard_up2_port }}", range: 0.0.0.0/0 }
+        - { proto: udp, start_port: "{{ wireguard_up1_port }}", end_port: "{{ wireguard_up2_port }}", range: 0.0.0.0/0 }
 
     - name: Set facts
       set_fact:

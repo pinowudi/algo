@@ -27,6 +27,8 @@
     - { proto: udp, port_min: 4500, port_max: 4500, range: 0.0.0.0/0 }
     - { proto: udp, port_min: 500, port_max: 500, range: 0.0.0.0/0 }
     - { proto: udp, port_min: "{{ wireguard_port }}", port_max: "{{ wireguard_port }}", range: 0.0.0.0/0 }
+    - { proto: udp, port_min: "{{ wireguard_up1_port }}", port_max: "{{ wireguard_up1_port }}", range: 0.0.0.0/0 }
+    - { proto: udp, port_min: "{{ wireguard_up2_port }}", port_max: "{{ wireguard_up2_port }}", range: 0.0.0.0/0 }
 
 - name: Gather facts about flavors
   os_flavor_facts:
