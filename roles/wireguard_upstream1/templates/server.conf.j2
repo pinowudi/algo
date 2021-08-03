@@ -5,13 +5,8 @@ PrivateKey = {{ lookup('file', wireguard_pki_path + '/private/' + IP_subject_alt
 SaveConfig = false
 # Do not allow wg-quick to adjust route tables. That will be done manually. 
 Table = off
-PostUp = \
-[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg  | wc -l) -gt 0]] && [[ $(ip route show table upstream | awk '{ print $3 }' | grep wg1 | wc -l) -lt 1]] && ip route append default dev wg1 table upstream; \
-[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg  | wc -l) -lt 1]] && ip route add default dev wg1 table upstream; \
-[[ $(ip rule show | grep {{ wireguard_network_ipv4 }} | wc -l) -lt 1]] &&  ip rule add from {{ wireguard_network_ipv4 }} table upstream; 
-PostDown = \
-[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg1 | wc -l) -gt 0]] && ip route del default dev wg1 table upstream; \
-[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg  | wc -l) -lt 1]] && ip rule del from {{ wireguard_network_ipv4 }} table upstream;
+PostUp = sh -c "[[ $(ip route show table upstream 2>/dev/null | awk '{ print $3 }' | grep wg  | wc -l) -gt 0 ]] && [[ $(ip route show table upstream 2>/dev/null | awk '{ print $3 }' | grep {{ wireguard_interface }} | wc -l) -lt 1 ]] && ip route append default dev {{ wireguard_interface }} table upstream; [[ $(ip route show table upstream 2>/dev/null | awk '{ print $3 }' | grep wg  | wc -l) -lt 1 ]] && ip route add default dev {{ wireguard_interface }} table upstream; [[ $(ip rule show | grep {{ wireguard_network_ipv4 }} | wc -l) -lt 1 ]] &&  ip rule add from {{ wireguard_network_ipv4 }} table upstream;"
+PostDown = sh -c "[[ $(ip route show table upstream 2>/dev/null | awk '{ print $3 }' | grep {{ wireguard_interface }} | wc -l) -gt 0 ]] && ip route del default dev {{ wireguard_interface }} table upstream; [[ $(ip route show table upstream 2>/dev/null | awk '{ print $3 }' | grep wg  | wc -l) -lt 1 ]] && ip rule del from {{ wireguard_network_ipv4 }} table upstream;"
 
 {% for u in wireguard_users %}
 {% if u in wg_up1_users %}

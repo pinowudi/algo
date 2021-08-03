@@ -34,7 +34,7 @@ wg_status () {
   not_running () {
     echo "WireGuard is not running on $wg_interface" && exit 1
   }
-  /usr/local/bin/wg show wg2 && echo "WireGuard is running on $wg_interface" || not_running
+  /usr/local/bin/wg show ${wg_interface} && echo "WireGuard is running on $wg_interface" || not_running
 }
 
 run_rc_command "$1"
