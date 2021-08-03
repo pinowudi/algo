@@ -56,6 +56,16 @@
         tags: wireguard
 
       - import_role:
+          name: wireguard_upstream1
+        when: wireguard_up1_enabled
+        tags: wireguard_upstream
+        
+      - import_role:
+          name: wireguard_upstream2
+        when: wireguard_up2_enabled
+        tags: wireguard_upstream
+
+      - import_role:
           name: strongswan
         when: ipsec_enabled
         tags: ipsec
@@ -87,6 +97,8 @@
               IP_subject_alt_name: {{ IP_subject_alt_name }}
               ipsec_enabled: {{ ipsec_enabled }}
               wireguard_enabled: {{ wireguard_enabled }}
+              wireguard_up1_enabled: {{ wireguard_up1_enabled }}
+              wireguard_up2_enabled: {{ wireguard_up2_enabled }}
               {% if tests|default(false)|bool %}
               ca_password: '{{ CA_password }}'
               p12_password: '{{ p12_export_password }}'

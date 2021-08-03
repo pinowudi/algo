@@ -101,6 +101,14 @@
         when: wireguard_enabled
 
       - import_role:
+          name: wireguard_upstream1
+        when: wireguard_up1_enabled
+
+      - import_role:
+          name: wireguard_upstream2
+        when: wireguard_up2_enabled
+
+      - import_role:
           name: strongswan
         when: ipsec_enabled
         tags: ipsec

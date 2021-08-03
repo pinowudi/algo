@@ -1,0 +1,14 @@
+---
+
+- name: Iproute2 configured
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { src: rt_tables, dest: /etc/iproute2/rt_tables }
+  notify:
+    - restart network.service
+    

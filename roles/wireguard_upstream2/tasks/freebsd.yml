@@ -1,0 +1,17 @@
+---
+- name: BSD | WireGuard installed
+  package:
+    name: wireguard
+    state: present
+
+- name: Set OS specific facts
+  set_fact:
+    service_name: wireguard_up2
+  tags: always
+
+- name: BSD | Configure rc script
+  copy:
+    src: wireguard_up2.sh
+    dest: /usr/local/etc/rc.d/wireguard_up2
+    mode: "0755"
+  notify: restart wireguard_up2

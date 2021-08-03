@@ -1,0 +1,14 @@
+[Interface]
+PrivateKey = {{ lookup('file', wireguard_pki_path + '/private/' + item.1) }}
+Address = {{ wireguard_client_ip }}
+{% if reduce_mtu|int > 0 %}MTU = {{ 1420 - reduce_mtu|int }}
+{% endif %}
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+[Peer]
+PublicKey = {{ lookup('file', wireguard_pki_path + '/public/' + IP_subject_alt_name) }}
+PresharedKey = {{ lookup('file', wireguard_pki_path + '/preshared/' + item.1) }}
+AllowedIPs = {{ wireguard_up1_network_ipv4 }}
+Endpoint = {{ wireguard_upstream_hostname if wireguard_upstream_use_hostname else IP_subject_alt_name }}:{{ wireguard_up1_port }}
+{{ 'PersistentKeepalive = ' + wireguard_PersistentKeepalive|string if wireguard_PersistentKeepalive > 0 else '' }}

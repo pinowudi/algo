@@ -12,6 +12,8 @@
         'algo_dns_adblocking "{{ algo_dns_adblocking }}"' \
         'algo_ssh_tunneling "{{ algo_ssh_tunneling }}"' \
         'wireguard_enabled "{{ wireguard_enabled }}"' \
+        'wireguard_up1_enabled "{{ wireguard_up1_enabled }}"' \
+        'wireguard_up2_enabled "{{ wireguard_up2_enabled }}"' \
         'dns_encryption "{{ dns_encryption }}"' \
         > /dev/tty
     tags: debug

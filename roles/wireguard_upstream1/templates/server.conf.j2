@@ -1,0 +1,27 @@
+[Interface]
+Address = {{ wireguard_server_ip }}
+ListenPort = {{ wireguard_port_actual if wireguard_up1_port|int == wireguard_port_avoid|int else wireguard_up1_port }}
+PrivateKey = {{ lookup('file', wireguard_pki_path + '/private/' + IP_subject_alt_name) }}
+SaveConfig = false
+# Do not allow wg-quick to adjust route tables. That will be done manually. 
+Table = off
+PostUp = \
+[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg  | wc -l) -gt 0]] && [[ $(ip route show table upstream | awk '{ print $3 }' | grep wg1 | wc -l) -lt 1]] && ip route append default dev wg1 table upstream; \
+[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg  | wc -l) -lt 1]] && ip route add default dev wg1 table upstream; \
+[[ $(ip rule show | grep {{ wireguard_network_ipv4 }} | wc -l) -lt 1]] &&  ip rule add from {{ wireguard_network_ipv4 }} table upstream; 
+PostDown = \
+[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg1 | wc -l) -gt 0]] && ip route del default dev wg1 table upstream; \
+[[ $(ip route show table upstream | awk '{ print $3 }' | grep wg  | wc -l) -lt 1]] && ip rule del from {{ wireguard_network_ipv4 }} table upstream;
+
+{% for u in wireguard_users %}
+{% if u in wg_up1_users %}
+{% set index = loop.index %}
+
+[Peer]
+# {{ u }}
+PublicKey = {{ lookup('file', wireguard_pki_path + '/public/' + u) }}
+PresharedKey = {{ lookup('file', wireguard_pki_path + '/preshared/' + u) }}
+#AllowedIPs = {{ wireguard_up1_network_ipv4 | ipmath(index|int+1) | ipv4('address') }}/32
+AllowedIPs = 0.0.0.0/0
+{% endif %}
+{% endfor %}

@@ -1,0 +1,63 @@
+Reference on how to get with ansible and run the build
+https://dev.to/ymotongpoo/run-remote-install-scripts-without-using-curl-command-in-ansible-5b6b
+
+Steps
+
+% sudo apt-get install unzip libmodule-build-pluggable-perl libnet-netmask-perl libdb-file-lock-perl
+% sudo apt-get install build-essential
+
+% wget https://github.com/lstein/Net-ISP-Balance/archive/master.zip
+% unzip master.zip
+% cd Net-ISP-Balance-master
+% perl ./Build.PL
+% ./Build installdeps
+% ./Build test
+% sudo ./Build install
+% sudo apt-get remove build-essential unzip 
+% sudo ln -s /var/lib/foolsm /var/lib/lsm
+
+lrwxrwxrwx  1 root      root        15 Jul 27 18:11 lsm -> /var/lib/foolsm
+
+lrwxrwxrwx 1 root root   30 Jul 27 17:43 load_balance.pl -> /usr/local/bin/load_balance.pl
+
+-rw-r--r-- 1 root root 1425 Jul 27 17:43 balance.conf
+
+## Net::ISP::Balance configuration file
+## edit it as needed to describe your router setup
+
+## This table defines the LAN and IP services.
+## Uncomment by removing hash symbols (#) and then edit as needed
+
+## service    device   role     ping-ip            weight  gateway
+WAN1          wg1     isp      1.1.1.1      1       default
+WAN2          wg2     isp      1.1.1.1      1       default
+LAN1          eth0    lan
+LAN2          wg0     lan
+
+# The mode controls whether to operate in "balanced" mode in which traffic
+# is distributed among the isp services proportional to the weights, or "failover"
+# mode in which all traffic is routed through the highest weighted service and
+# switches to lower-weighted services only when the higher one(s) are unavailable.
+mode=balanced
+#mode=failover
+
+## The "forwarding_group" option gives you fine control over how
+## packets are forwarded.  See the online docs for details.  :lan
+## means all interfaces marked as "lan" :isp means all interfaces
+## marked as "isp" the default (shown below) allows forwarding among
+## all lan and isp interfaces
+
+forwarding_group=LAN2 :isp
+
+## The options below are passed to lsm, among others.
+## the defaults are shown. To change them, uncomment
+## and edit.
+
+#warn_email=root@localhost
+#interval_ms=1000
+#max_packet_loss=15
+#max_successive_pkts_lost=7
+#min_packet_loss=5
+#min_successive_pkts_rcvd=10
+#long_down_time=120
+

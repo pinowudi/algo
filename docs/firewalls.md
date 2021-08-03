@@ -28,6 +28,8 @@ Port | Protocol | Description | Related variables in `config.cfg`
 500   | UDP | IPsec IKEv2 | `ipsec_enabled`
 4500  | UDP | IPsec NAT-T | `ipsec_enabled`
 51820 | UDP | WireGuard | `wireguard_enabled`, `wireguard_port`
+51821 | UDP | WireGuard Upstream 1 | `wireguard_up1_enabled`, `wireguard_up1_port`
+51822 | UDP | WireGuard Upstream 2 | `wireguard_up2_enabled`, `wireguard_up2_port`
 
 If you have chosen to disable either IPsec or WireGuard in `config.cfg` before running `./algo` then the corresponding ports don't need to pass through the firewall. SSH is used when performing a **cloud** deployment and when subsequently modifying the list of VPN users by running `./algo update-users`.
 

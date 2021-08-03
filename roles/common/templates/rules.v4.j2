@@ -1,5 +1,5 @@
-{% set subnets = ([strongswan_network] if ipsec_enabled else []) + ([wireguard_network_ipv4] if wireguard_enabled else []) %}
-{% set ports = (['500', '4500'] if ipsec_enabled else []) + ([wireguard_port] if wireguard_enabled else []) + ([wireguard_port_actual] if wireguard_enabled and wireguard_port|int == wireguard_port_avoid|int else []) %}
+{% set subnets = ([strongswan_network] if ipsec_enabled else []) + ([wireguard_network_ipv4] if wireguard_enabled else []) + ([wireguard_up1_network_ipv4] if wireguard_up1_enabled else []) + ([wireguard_up2_network_ipv4] if wireguard_up2_enabled else []) %}
+{% set ports = (['500', '4500'] if ipsec_enabled else []) + ([wireguard_port] if wireguard_enabled else []) + ([wireguard_up1_port] if wireguard_up1_enabled else []) + ([wireguard_up2_port] if wireguard_up2_enabled else []) + ([wireguard_port_actual] if wireguard_enabled and wireguard_port|int == wireguard_port_avoid|int else []) %}
 
 #### The mangle table
 # This table allows us to modify packet headers
@@ -36,7 +36,10 @@ COMMIT
 -A PREROUTING --in-interface {{ ansible_default_ipv4['interface'] }} -p udp --dport {{ wireguard_port_avoid }} -j REDIRECT --to-port {{ wireguard_port_actual }}
 {% endif %}
 # Allow traffic from the VPN network to the outside world, and replies
--A POSTROUTING -s {{ subnets|join(',') }} -m policy --pol none --dir out {{ '-j SNAT --to ' + snat_aipv4 if snat_aipv4 else '-j MASQUERADE' }}
+#-A POSTROUTING -s {{ subnets|join(',') }} -m policy --pol none --dir out {{ '-j SNAT --to ' + snat_aipv4 if snat_aipv4 else '-j MASQUERADE' }}
+#-A POSTROUTING -s {{ subnets|join(',') }} -o eth0 -j MASQUERADE
+# Adjust masquerade from local egress to upstream wan egress while maintaining a local backstop for failure if the default upstreams both fail.
+-A POSTROUTING -s {{ wireguard_network_ipv4 }} -o wg1,wg2,eth0 -j MASQUERADE
 
 
 COMMIT
